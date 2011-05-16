@@ -1,13 +1,13 @@
 # FlossBot
+Es el código del bot de #floss-pa en la red [Freenode](http://freenode.net/)
+## Instalación
 
-## Installation
+## Uso
 
-## Usage
-
-## Configuration
+## Configuración
 
 ## Plugins
 
-## Contributing
+## Contribuciones
 
-## License
+## Licencia
