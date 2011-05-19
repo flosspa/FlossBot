@@ -17,7 +17,6 @@ class Dispatcher:
                 self.irc.sendChannel("P4C0 rulez! todos deberian chuparsela... he dicho!")
         elif info[1] == "PRIVMSG" and info[2] == self.nick:
             #private msg
-            print info[0] # a ver como parseas esto para sacar el nick del webas que te escribio
-            nick = "P4C0"
-            self.irc.sendPrivate(nick, "Shi Shi Shi Amo")
+            nick = info[0].split("!")[0][1:] #so 1337
+            self.irc.sendPrivate(nick, "SHOW ME TITS OR STFU")
 
