@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys, socket, string, random, os, time
 from Events import *
 from Irc import *
@@ -13,6 +15,10 @@ def restartIRCHook(event):
 
 def main(args):
     global irc
+    
+    if len(sys.argv) != 4:
+        print 'Uso: main.py \'<servidor>\' <puerto> \'<canal>\''
+        sys.exit(1)
 
     listener = Listener(IRC_RESTART, restartIRCHook)
     getEventManager().addListener(listener)
