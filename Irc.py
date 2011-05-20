@@ -114,9 +114,6 @@ class Irc:
             else: 
                 event = Event(IRC_MSG, string)
                 getEventManager().signalEvent(event)
-                #if string.lower().find(self.nick.lower()) > -1:
-                #    print "lets reply"
-                #    self.socket.send("PRIVMSG %s :P4C0 rulez! todos deberian chuparsela... he dicho!\r\n" % self.channel)
         else:
             print "SCRAP", string
             if string == "ERROR :All connections in use":
