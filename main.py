@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, socket, string, random, os, time
+import sys, socket, string, random, os, time, ConfigParser
 from Events import *
 from Irc import *
 
@@ -16,22 +16,41 @@ def restartIRCHook(event):
 def main(args):
     global irc
     
-    if len(sys.argv) != 4:
-        print 'Uso: main.py \'<servidor>\' <puerto> \'<canal>\''
-        sys.exit(1)
+    config = ConfigParser.ConfigParser()
+    if (sys.argv != 2):
+        cfile = "bot.conf"
+    else:
+        cfile = args[1]
 
     listener = Listener(IRC_RESTART, restartIRCHook)
     getEventManager().addListener(listener)
 
-    host = args[1]
-    port = int(args[2])
-    channel = args[3]
-    if channel[0] != '#':
-        channel = '#' + channel
+    try:
+        config.readfp(open(cfile))
+    except:
+        print "Error loading configuration file:", sys.exc_info()[1]
+        sys.exit(1)
+
+    host = config.get("main", "host")
+    port = config.get("main", "port")
+    channels = config.get("main", "channels")
+    nick = config.get("main", "nick")
+
+    print "Host: ", host
+    print "Port: ", port
+    print "Channels: ", channels
+
+    channels = channels.split(",")
+    
+    port = int(port)
+    
+    for i in range(len(channels)):
+        if channels[i][0] != '#':
+            channels[i] = '#' + channels[i]
 
     getEventManager().start()
 
-    irc = Irc(host, port, channel)
+    irc = Irc(host, port, channels, nick)
 
     while running:
         try:

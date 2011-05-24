@@ -11,12 +11,14 @@ class Dispatcher:
     def recvIRCMsg(self, event):
         string = event.arg
         info = string.split(" ")
-        if info[1] == "PRIVMSG" and info[2] == self.channel:
-            #msg to the channel
+        if info[1] == "PRIVMSG": 
+            #msg to reply
             if string.lower().find(self.nick.lower()) > -1:
-                self.irc.sendChannel("P4C0 rulez! todos deberian chuparsela... he dicho!")
-        elif info[1] == "PRIVMSG" and info[2] == self.nick:
-            #private msg
-            nick = info[0].split("!")[0][1:] #so 1337
-            self.irc.sendPrivate(nick, "SHOW ME TITS OR STFU")
+                destination = info[2]
+                source = info[0].split("!")[0][1:]
+                if (source != self.nick and destination != self.nick):
+                    self.irc.sendTo(destination, "Bot in Beta Testing... ")
+                elif (destination == self.nick and source != self.nick):
+                    self.irc.sendTo(source, "Bot in Beta Testing... ")
+
 

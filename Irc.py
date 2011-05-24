@@ -32,7 +32,7 @@ class ListenThread(threading.Thread):
 
 class Irc:
 
-    def __init__(self, host, port, channel):
+    def __init__(self, host, port, channel, nick):
         self.host = host
         self.port = port
         self.channel = channel
@@ -40,9 +40,8 @@ class Irc:
         self.socket.settimeout(5)
         self.connected = False
 
-        self.nick = "FlossPaBot" 
+        self.nick = nick
         self.ops = []
-        print "Nick:", self.nick
 
         listener = Listener(IRC_RECV, self.parseIRCString)
         getEventManager().addListener(listener)
@@ -67,10 +66,8 @@ class Irc:
         self.socket.send("NICK %s\r\n" % self.nick)
         self.socket.send("USER flossbot %s Bototo :Floss-PA Bot\r\n" % self.host)
 
-    def changeChannel(self, newchannel):
-        self.socket.send("PART %s\r\n" % self.channel)
-        self.socket.send("JOIN %s\r\n" % newchannel)
-        self.channel = newchannel
+        listener = Listener(IRC_MSG, self.dispatcher.recvIRCMsg)
+        getEventManager().addListener(listener)
 
     def disconnect(self):
         self.connected = False
@@ -92,12 +89,12 @@ class Irc:
         elif string[0] == ":":
             print string
             info = string.split(" ")
-            if info[1] == "MODE" and info[2] == self.channel:
+            if info[1] == "MODE": #and info[2] == self.channel:
                 if info[3] == "+o":
                     self.ops.append(info[4])
                 elif info[3] == "-o":
                     self.deleteOp(info[4])
-            elif info[2] == self.nick and (info[3] == "=" or info[3] == "@") and info[4] == self.channel:
+            elif info[2] == self.nick and (info[3] == "=" or info[3] == "@"): #and info[4] == self.channel:
                 for op in info[5:]:
                     if len(op) == 0:
                         continue
@@ -105,12 +102,11 @@ class Irc:
                     if op[0] == "@":
                         self.ops.append(op[1:])
                 print "Connection succesful"
-                listener = Listener(IRC_MSG, self.dispatcher.recvIRCMsg)
-                getEventManager().addListener(listener)
             elif info[1] == "002":
-                self.socket.send("JOIN %s\r\n" % self.channel)
+                for to_join in self.channel:
+                    self.socket.send("JOIN %s\r\n" % to_join)
             elif info[1] == "KICK":
-                self.socket.send("JOIN %s\r\n" % self.channel)
+                self.socket.send("JOIN %s\r\n" % info[2])
             else: 
                 event = Event(IRC_MSG, string)
                 getEventManager().signalEvent(event)
@@ -123,12 +119,8 @@ class Irc:
                 event = Event(IRC_RESTART, None)
                 getEventManager().signalEvent(event)
 
-    def sendChannel(self, message):
-        self.socket.send("PRIVMSG %s :%s\r\n" % (self.channel, message))
-
-    def sendPrivate(self, nick, message):
-        self.socket.send("PRIVMSG %s :%s\r\n" % (nick, message))
-
+    def sendTo(self, dest, message):
+        self.socket.send("PRIVMSG %s :%s\r\n" % (dest, message))
 
     def stop(self):
         if self.listenThread:

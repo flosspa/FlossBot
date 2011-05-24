@@ -1,0 +1,5 @@
+2011-05-24  Manuel Argüelles  <manuel.arguelles@azetti.com>
+
+	* main.py (main): Added multi channels support and
+	configuration file.
+
