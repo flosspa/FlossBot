@@ -14,7 +14,7 @@ class Dispatcher:
         if info[1] == "PRIVMSG" and info[2] == self.channel:
             #msg to the channel
             if string.lower().find(self.nick.lower()) > -1:
-                self.irc.sendChannel("P4C0 rulez! todos deberian chuparsela... he dicho!")
+                self.irc.sendChannel("Hola Guap@ ;)")
         elif info[1] == "PRIVMSG" and info[2] == self.nick:
             #private msg
             nick = info[0].split("!")[0][1:] #so 1337
