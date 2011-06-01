@@ -1,3 +1,9 @@
+2011-06-01  Manuel Argüelles  <manuel.arguelles@azetti.com>
+
+	* Plugin.py (Plugin): Plugin interface one way for now
+
+	* plugins/logger.py: Example plugin
+
 2011-05-24  Manuel Argüelles  <manuel.arguelles@azetti.com>
 
 	* main.py (main): Added multi channels support and
