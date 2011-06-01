@@ -22,8 +22,7 @@ class Dispatcher:
     def recvIRCMsg(self, event):
         string = event.arg
         info = string.split(" ")
-        if info[1] == "PRIVMSG":
-            print "We are adding: %s to %d plugins" % (string, len(self.plugins))
+        if info[1] == "PRIVMSG" or info[1] == "JOIN" or info[1] == "PART" or info[1] == "KICK":
             for i in range(len(self.plugins)):
                 self.plugins[i].sendToPlugin(string)
 

@@ -1,5 +1,10 @@
 2011-06-01  Manuel Argüelles  <manuel.arguelles@azetti.com>
 
+	* plugins/logger.py (logger.setup): Cleaned up a bit
+
+	* Dispatcher.py (Dispatcher.recvIRCMsg): Send also JOIN, PART and
+	KICK messages to the plugins
+
 	* Plugin.py (Plugin): Plugin interface one way for now
 
 	* plugins/logger.py: Example plugin
