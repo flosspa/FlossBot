@@ -3,9 +3,11 @@
 import sys, socket, string, random, os, time, ConfigParser
 from Events import *
 from Irc import *
+from Plugin import *
 
 irc = None
 running = True
+
 
 def restartIRCHook(event):
     global irc
@@ -24,6 +26,8 @@ def main(args):
 
     listener = Listener(IRC_RESTART, restartIRCHook)
     getEventManager().addListener(listener)
+
+    __import__("plugins.logger")
 
     try:
         config.readfp(open(cfile))
@@ -51,6 +55,7 @@ def main(args):
     getEventManager().start()
 
     irc = Irc(host, port, channels, nick)
+
 
     while running:
         try:

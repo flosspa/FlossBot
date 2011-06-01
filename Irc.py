@@ -46,8 +46,6 @@ class Irc:
         listener = Listener(IRC_RECV, self.parseIRCString)
         getEventManager().addListener(listener)
 
-        self.dispatcher = Dispatcher(self)
-
         self.connect()
 
     def connect(self):
@@ -66,6 +64,8 @@ class Irc:
         self.socket.send("NICK %s\r\n" % self.nick)
         self.socket.send("USER flossbot %s Bototo :Floss-PA Bot\r\n" % self.host)
 
+        self.dispatcher = Dispatcher(self)
+
         listener = Listener(IRC_MSG, self.dispatcher.recvIRCMsg)
         getEventManager().addListener(listener)
 
@@ -77,6 +77,8 @@ class Irc:
         if self.listenThread and self.listenThread.is_alive():
             self.listenThread.join()
         self.listenThread = None
+        self.dispatcher.stop_plugins()
+        self.dispatcher = None
 
     def deleteOp(self, op):
         self.ops[:] = (value for value in self.ops if value != op)
@@ -126,8 +128,5 @@ class Irc:
         if self.listenThread:
             self.listenThread.stop()
             
-    def getChannel(self):
-        return self.channel
-
     def getNick(self):
         return self.nick
