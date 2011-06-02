@@ -30,7 +30,7 @@ class logger(Plugin):
 
     def log_user_msg(self, line):
         items = line.split(" ")
-        msg = line.split(":")
+        msg = line.split(":", 2)
         channel = items[2][1:]
         source = items[0].split("!")[0][1:]
         data = msg[2]

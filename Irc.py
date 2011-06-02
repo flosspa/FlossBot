@@ -107,7 +107,7 @@ class Irc:
             elif info[1] == "002":
                 for to_join in self.channel:
                     self.socket.send("JOIN %s\r\n" % to_join)
-            elif info[1] == "KICK":
+            elif info[1] == "KICK" and info[3] == self.nick:
                 self.socket.send("JOIN %s\r\n" % info[2])
             else: 
                 event = Event(IRC_MSG, string)
