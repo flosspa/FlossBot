@@ -1,10 +1,11 @@
 import threading, Queue, os
+from Events import *
 
 class Plugin(threading.Thread):
     def __init__(self):
         self.__queue = Queue.Queue(0)
         threading.Thread.__init__(self)
-
+        
     def run(self):
         raise NotImplementedError
 
@@ -15,17 +16,30 @@ class Plugin(threading.Thread):
         self.__queue.put(message)
         
     def getData(self):
-        # TODO when there's no messages this can
-        # block the exit of the thread... time out
-        # and exception handling should be done here
-        return self.__queue.get(True)
+        d = None
+        try:
+            d = self.__queue.get(True, 5)
+        except:
+            pass
+        return d
         
     def setup(self):
         raise NotImplementedError
 
     def stop(self):
         raise NotImplementedError
+
+    def sendToIrc(self, destination, msg):
+        line = "PRIVMSG %s :%s\r\n" % (destination, msg)
+        event = Event(IRC_SEND, line)
+        getEventManager().signalEvent(event)
+        
+
+    def sendToIrcRaw(self, msg):
+        event = Event(IRC_SEND, msg)
+        getEventManager().signalEvent(event)
     
+
 def find_plugins(path, cls):
     subclasses=[]
     

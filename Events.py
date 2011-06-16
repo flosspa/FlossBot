@@ -3,6 +3,8 @@ import threading, Queue
 IRC_RECV = 1
 IRC_RESTART = 2
 IRC_MSG = 3
+IRC_SEND = 4
+
 
 class Event:
 

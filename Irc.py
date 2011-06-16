@@ -69,6 +69,9 @@ class Irc:
         listener = Listener(IRC_MSG, self.dispatcher.recvIRCMsg)
         getEventManager().addListener(listener)
 
+        listener2 = Listener(IRC_SEND, self.send)
+        getEventManager().addListener(listener2)
+
     def disconnect(self):
         self.connected = False
         self.stop()
@@ -121,8 +124,9 @@ class Irc:
                 event = Event(IRC_RESTART, None)
                 getEventManager().signalEvent(event)
 
-    def sendTo(self, dest, message):
-        self.socket.send("PRIVMSG %s :%s\r\n" % (dest, message))
+    def send(self, event):
+        message = event.arg
+        self.socket.send(message)
 
     def stop(self):
         if self.listenThread:

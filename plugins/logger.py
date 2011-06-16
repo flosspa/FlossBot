@@ -12,10 +12,13 @@ class logger(Plugin):
     def setup(self):
         print "We need to read a config file or something"
         self.path = "."
+        self.running = False #Disabled for now...
 
     def run(self):
         while self.running:
             line = super(logger, self).getData()
+            if line == None:
+                continue
             info = line.split(" ")
             if info[1] == "PRIVMSG":
                 self.log_user_msg(line)
